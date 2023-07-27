@@ -16,25 +16,20 @@ const client = new Client({
 
 let users = [];
 
+let guilds = await client.guilds.fetch();
+
+for(let guild in guilds){
+  let members = await guild.members.fetch();
+  for(let member in members){
+    users.push(member);
+  }
+}
+
 client.on("ready", (bot) => {
   console.log(`${bot.user.tag} ready!`);
 
-  console.log(getAllUsers());
+  console.log(users);
 });
-
-function getAllUsers(){
-  let list = [];
-  let guilds = client.guilds.cache.forEach(guild => {
-    let members = guild.members.cache.forEach(member => {
-      list.push({
-        username: members.user.username,
-        id: members.user.id
-      });
-    })
-  });
-  console.log(list);
-  return list;
-}
 
 //zach is cringe lmao
 client.on("messageCreate", (message) => {
