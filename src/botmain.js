@@ -10,7 +10,8 @@ const client = new Client({
     IntentsBitField.Flags.Guilds,
     IntentsBitField.Flags.GuildMembers,
     IntentsBitField.Flags.GuildMessages,
-    IntentsBitField.Flags.MessageContent
+    IntentsBitField.Flags.MessageContent,
+    IntentsBitField.Flags.GuildPresences
   ]
 });
 
@@ -53,6 +54,11 @@ client.on("messageCreate", (message) => {
     }
     
   }
+});
+
+client.on('presenceUpdate', (oldpresence, newpresence) => {
+  console.log(oldpresence);
+  console.log(newpresence);
 });
 
 //this took me way too long holy shit
