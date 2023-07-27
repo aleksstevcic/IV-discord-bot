@@ -14,18 +14,17 @@ const client = new Client({
   ]
 });
 
-let guilds = getGuilds();
-
 client.on("ready", (bot) => {
   console.log(`${bot.user.tag} ready!`);
 
   //load and cache all guilds and members
-  client.guilds.fetch().then(
-    client.guilds.cache.forEach(guild => {
+  client.guilds.fetch().then((guilds) => {
+    guilds.forEach(guild => {
       console.log(guild);
       guild.members.fetch();
     })
-  );
+  });
+});
   
 
   //let zach = getUserByUsername("chompskii");
@@ -66,10 +65,6 @@ function getUserByUsername(username = ""){
   });
 
   return;
-}
-
-function getGuilds(){
-  return client.guilds.cache.map(guild => guild.id);
 }
 
 //will only be accessible via secret in github action. testing on a local machine is impossible rn
