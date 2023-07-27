@@ -19,10 +19,11 @@ let users = [];
 client.on("ready", (bot) => {
   console.log(`${bot.user.tag} ready!`);
 
-  console.log(bot.guildId);
+  console.log(getAllUsers());
 });
 
-function getUsers(list){
+function getAllUsers(){
+  let list = [];
   let guilds = client.guilds.cache.forEach(guild => {
     let members = guild.members.cache.forEach(member => {
       list.push({
@@ -32,6 +33,7 @@ function getUsers(list){
     })
   });
   console.log(list);
+  return list;
 }
 
 //zach is cringe lmao
