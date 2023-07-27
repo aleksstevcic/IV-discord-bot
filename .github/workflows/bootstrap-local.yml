@@ -36,7 +36,7 @@ jobs:
 
         #build with the dockerfile in the same folder, and name it alestevcom
         #should be run within the root alestev.com folder
-        docker build -t IV-discord-bot .
+        docker build -t iv-discord-bot .
 
         #stop compose file that runs this server
         curl -X POST --insecure -I "https://localhost:9443/api/stacks/$stackid/stop" \
