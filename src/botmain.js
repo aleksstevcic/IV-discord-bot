@@ -37,14 +37,14 @@ client.on("ready", (bot) => {
 //zach is cringe lmao
 client.on("messageCreate", (message) => {
 
-
+  let msgtext = message.content.toLowerCase();
 
   //if message is not by a bot
   if (!message.author.bot) {
 
     
     //if the message has the word "weed" in it
-    if (message.content.indexOf("weed") > -1) {
+    if (msgtext.indexOf("weed") > -1) {
 
       //get user of specific username
       let zach = getUserByUsername("chompskii");
