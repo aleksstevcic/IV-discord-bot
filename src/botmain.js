@@ -1,4 +1,6 @@
+//dotenv is generated during build action. all secrets should be stored in github secrets
 require('dotenv').config();
+
 
 const { Client, IntentsBitField } = require("discord.js");
 
@@ -15,10 +17,22 @@ client.on("ready", (bot) => {
   console.log(`${bot.user.tag} ready!`);
 });
 
+//zach is cringe lmao
 client.on("messageCreate", (message) => {
+  //if message is not by a bot
   if (!message.author.bot) {
-    if (message.content == "cringe") {
-      message.reply("zach is cringe");
+    //if message contains the keyword "cringe"
+    if (message.content.indexOf("cringe") > -1) {
+
+      //get user of specific username
+      
+
+      //reply
+      message.reply("@chompskii is cringe");
+
+
+      //this will send a message to that channel
+      //message.channel.send();
     }
   }
 });
