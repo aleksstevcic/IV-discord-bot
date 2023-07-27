@@ -15,6 +15,11 @@ const client = new Client({
   ]
 });
 
+const leagueAppID = "401518684763586560";
+const leagueTimeoutTime = 30*60*1000;
+
+let timers = {};
+
 //events
 client.on("ready", (bot) => {
   console.log(`${bot.user.tag} ready!`);
@@ -57,9 +62,70 @@ client.on("messageCreate", (message) => {
 });
 
 client.on('presenceUpdate', (oldpresence, newpresence) => {
-  console.log(oldpresence);
-  console.log(newpresence);
+  
+  if(oldpresence.activities && newpresence.activities){
+    //this is such an inefficient function lil bro i dont care
+    leaguememes(oldpresence, newpresence);
+  }
 });
+
+function leaguememes(oldpresence, newpresence){
+
+
+  for(let newactivity of newpresence.activities){
+
+    let stillPlayingLeague = false;
+
+    //only if the new activity has league of legends, then comb through the old activities
+    if(newactivity.applicationId == leagueAppID){
+
+      for(let oldactivity of oldpresence.activities){
+        if(oldactivity.applicationId == newactivity.applicationId){
+          stillPlayingLeague = true;
+          break;
+        }
+      }
+
+      if(!stillPlayingLeague){
+        timers[newpresence.userId] = setTimeout(leagueTimeout, leagueTimeoutTime, newpresence.userId);
+      }
+
+    }
+
+  }
+
+  //two nearly identical for loops! LOL! im such a good programmer!
+  for(let oldactivity of oldpresence.activities){
+
+    let closedLeague = true;
+
+    //only if the old activity has league of legends, then go through the new ones
+    if(oldactivity.applicationId == leagueAppID){
+
+      for(let newactivity of newpresence.activities){
+        if(oldactivity.applicationId == newactivity.applicationId){
+          closedLeague = false;
+          break;
+        }
+      }
+
+      //clear the timer
+      if(closedLeague){
+        clearTimeout(timers[oldpresence.userId]);
+        delete timers[oldpresence.userId];
+      }
+
+    }
+
+  }
+
+}
+
+
+
+function leagueTimeout(userID){
+  console.log(getUserByUserID(userID) + " is playing too much league");
+}
 
 //this took me way too long holy shit
 function getUserByUsername(username = ""){
@@ -83,6 +149,32 @@ function getUserByUsername(username = ""){
       //if the username matches, then return the entire user object
       if(mvalue.user.username == username){
         return mvalue;
+      }
+    }
+  }
+}
+
+function getUserByUserID(userid = ""){
+  if(userid==="") return;
+  
+  //get guilds
+  let guilds = client.guilds.cache;
+  
+  //its a map, so we assign the key-value pair on each iteration
+  for(let [key, value] of guilds){
+    
+    //assign guild variable to the currently selected guild
+    let guild = value;
+
+    //get all members
+    let members = guild.members.cache;
+    
+    //same as before, but now for members, since it is also a map
+    for(let [mkey, mvalue] of members){
+
+      //if the username matches, then return the entire user object
+      if(mvalue.user.id == userid){
+        return mvalue.user.username;
       }
     }
   }
