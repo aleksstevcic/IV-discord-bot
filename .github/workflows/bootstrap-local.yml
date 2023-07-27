@@ -1,0 +1,50 @@
+name: "LOCAL: Deploy IV-discord-bot"
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+  
+jobs:
+  deploy:
+    runs-on: self-hosted
+    environment: dev
+    steps:
+    - name: shell
+      run: |
+
+        #needs to run as root (no it doesnt lol)
+        bottoken=${{secrets.BOT_TOKEN}}
+        gitkey=${{secrets.GIT_KEY}}
+        apikey=${{secrets.PORTAINER_API_KEY}}
+
+        #clear working folder
+        rm -rf ./*
+
+        #clone repository
+        git clone https://aleksstevcic:$gitkey@github.com/aleksstevcic/IV-discord-bot
+        cd IV-discord-bot
+        
+        #move the docker files to the main directory
+        mv ./docker/* ./
+        
+        #variables. interfaces with portainer
+        stackid="39"
+
+        #build with the dockerfile in the same folder, and name it alestevcom
+        #should be run within the root alestev.com folder
+        docker build -t IV-discord-bot .
+
+        #stop compose file that runs this server
+        curl -X POST --insecure -I "https://localhost:9443/api/stacks/$stackid/stop" \
+        -H "X-API-Key:$apikey"
+
+        #wait a second
+        sleep 1
+
+        #start compose file that runs this server
+        curl -X POST --insecure -I "https://localhost:9443/api/stacks/$stackid/start" \
+        -H "X-API-Key:$apikey"
+
+        #prune any untagged images
+        yes | docker image prune
