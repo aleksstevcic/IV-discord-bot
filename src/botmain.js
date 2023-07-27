@@ -4,6 +4,7 @@ require('dotenv').config();
 
 const { Client, IntentsBitField } = require("discord.js");
 
+//globals
 const client = new Client({
   intents: [
     IntentsBitField.Flags.Guilds,
@@ -13,10 +14,22 @@ const client = new Client({
   ]
 });
 
+let users = [];
+
 client.on("ready", (bot) => {
   console.log(`${bot.user.tag} ready!`);
-  console.log(client.guilds.cache.users);
+
+  getUsers(users);
 });
+
+function getUsers(list){
+  let guilds = client.guilds.cache.forEach(guild => {
+    let members = guild.members.cache.forEach(member => {
+      list.push(member);
+    })
+  });
+  console.log(list);
+}
 
 //zach is cringe lmao
 client.on("messageCreate", (message) => {
