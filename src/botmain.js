@@ -15,6 +15,7 @@ const client = new Client({
 
 client.on("ready", (bot) => {
   console.log(`${bot.user.tag} ready!`);
+  console.log(client.guilds.cache.users);
 });
 
 //zach is cringe lmao
