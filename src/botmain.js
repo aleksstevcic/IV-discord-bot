@@ -19,16 +19,11 @@ client.on("ready", (bot) => {
 
   //load and cache all guilds and members
   client.guilds.fetch().then(guilds => {
-    console.log(guilds);
     guilds.forEach(guild => {
-      let asdf = client.guilds.cache.get(guild.id).members.fetch().then(members => {
-        console.log(members);
-      });
+      let asdf = client.guilds.cache.get(guild.id).members.fetch();
     })
   });
 
-  //let zach = getUserByUsername("chompskii");
-  //console.log(zach);
 });
   
 
@@ -40,34 +35,45 @@ client.on("messageCreate", (message) => {
   if (!message.author.bot) {
     //if message contains the keyword "cringe"
     if (message.content.indexOf("cringe") > -1) {
+
       //get user of specific username
-      //let user = client.users.fetch("id");
-      
+      let zach = getUserByUsername("chompskii");
       //reply
-      
-      //message.reply("<@" + zach + "> is cringe");
+      message.reply("<@" + zach.user.id + "> is cringe");
 
 
       //this will send a message to that channel
       //message.channel.send();
     }
     
-    console.log(message.author);
   }
 });
 
+//this took me way too long holy shit
 function getUserByUsername(username = ""){
   if(username==="") return;
   
-  client.guilds.cache.forEach(guild => {
-    guild.members.cache.forEach(member => {
-      console.log(member);
-      members.fetch();
-      if(member.username === username) return member.id;
-    });
-  });
+  //get guilds
+  let guilds = client.guilds.cache;
+  
+  //its a map, so we assign the key-value pair on each iteration
+  for(let [key, value] of guilds){
+    
+    //assign guild variable to the currently selected guild
+    let guild = value;
 
-  return;
+    //get all members
+    let members = guild.members.cache;
+    
+    //same as before, but now for members, since it is also a map
+    for(let [mkey, mvalue] of members){
+
+      //if the username matches, then return the entire user object
+      if(mvalue.user.username == username){
+        return mvalue;
+      }
+    }
+  }
 }
 
 //will only be accessible via secret in github action. testing on a local machine is impossible rn
