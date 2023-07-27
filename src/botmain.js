@@ -49,16 +49,12 @@ client.on("messageCreate", (message) => {
 function getUserByUsername(username = ""){
   if(username==="") return;
   
-  for(let guild of guilds){
-    for(let members of guilds.cache.get(guild).members.cache){
-      console.log(members);
-      for(let member of members){
-        if(member.username === username) return user.id;
-      }
-    }
-  }
+  client.guilds.cache.forEach(guild => {
+    guild.members.cache.forEach(member => {
+      if(member.username === username) return member.id;
+    });
+  });
   
-
   return;
 }
 
