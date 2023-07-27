@@ -16,7 +16,7 @@ jobs:
         #needs to run as root (no it doesnt lol)
         bottoken=${{secrets.BOT_TOKEN}}
         gitkey=${{secrets.GIT_KEY}}
-        apikey=${{secrets.PORTAINER_API_KEY}}
+        apikey=${{secrets.PORTAINER_KEY}}
 
         #clear working folder
         rm -rf ./*
