@@ -19,6 +19,14 @@ let guilds = getGuilds();
 client.on("ready", (bot) => {
   console.log(`${bot.user.tag} ready!`);
 
+  client.guilds.fetch().then(
+    client.guilds.cache.forEach(guild => {
+      guild.members.cache.forEach(member => {
+        members.fetch();
+      });
+    })
+  );
+  
 
   let zach = getUserByUsername("chompskii");
   console.log(zach);
@@ -52,6 +60,7 @@ function getUserByUsername(username = ""){
   client.guilds.cache.forEach(guild => {
     guild.members.cache.forEach(member => {
       console.log(member);
+      members.fetch();
       if(member.username === username) return member.id;
     });
   });
