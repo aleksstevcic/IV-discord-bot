@@ -63,7 +63,7 @@ client.on("messageCreate", (message) => {
 
 client.on('presenceUpdate', (oldpresence, newpresence) => {
   
-  if(oldpresence.activities && newpresence.activities){
+  if(oldpresence.HasOwnProperty("activities") && newpresence.HasOwnProperty("activities")){
     //this is such an inefficient function lil bro i dont care
     leaguememes(oldpresence, newpresence);
   }
