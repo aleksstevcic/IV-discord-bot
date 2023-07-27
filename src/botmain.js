@@ -14,21 +14,14 @@ const client = new Client({
   ]
 });
 
-let users = [];
-
-let guilds = await client.guilds.fetch();
-
-for(let guild in guilds){
-  let members = await guild.members.fetch();
-  for(let member in members){
-    users.push(member);
-  }
-}
+let guilds = getGuilds();
 
 client.on("ready", (bot) => {
   console.log(`${bot.user.tag} ready!`);
 
-  console.log(users);
+
+  let zach = getUserByUsername("chompskii");
+  console.log(zach);
 });
 
 //zach is cringe lmao
@@ -41,14 +34,14 @@ client.on("messageCreate", (message) => {
       //let user = client.users.fetch("id");
       
       //reply
-      //let zach = getUserByUsername("chompskii");
+      
       //message.reply("<@" + zach + "> is cringe");
 
 
       //this will send a message to that channel
       //message.channel.send();
     }
-
+    
     console.log(message.author);
   }
 });
@@ -56,12 +49,25 @@ client.on("messageCreate", (message) => {
 function getUserByUsername(username = ""){
   if(username==="") return;
   
-  for(let user in client.guilds.cache.users){
-    if(user.username === username) return user.id;
+  for(let guild of guilds){
+    for(let members of guilds.cache.get(guild).members.cache){
+      console.log(members);
+      for(let member of members){
+        if(member.username === username) return user.id;
+      }
+    }
   }
+  
 
   return;
 }
 
+function getGuilds(){
+  return client.guilds.cache.map(guild => guild.id);
+}
+
 //will only be accessible via secret in github action. testing on a local machine is impossible rn
 client.login(process.env.BOT_TOKEN);
+
+
+
