@@ -19,13 +19,16 @@ let users = [];
 client.on("ready", (bot) => {
   console.log(`${bot.user.tag} ready!`);
 
-  getUsers(users);
+  console.log(bot.guildId);
 });
 
 function getUsers(list){
   let guilds = client.guilds.cache.forEach(guild => {
     let members = guild.members.cache.forEach(member => {
-      list.push(member);
+      list.push({
+        username: members.user.username,
+        id: members.user.id
+      });
     })
   });
   console.log(list);
@@ -37,10 +40,9 @@ client.on("messageCreate", (message) => {
   if (!message.author.bot) {
     //if message contains the keyword "cringe"
     if (message.content.indexOf("cringe") > -1) {
-
       //get user of specific username
       //let user = client.users.fetch("id");
-
+      
       //reply
       //let zach = getUserByUsername("chompskii");
       //message.reply("<@" + zach + "> is cringe");
