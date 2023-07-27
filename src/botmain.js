@@ -24,12 +24,13 @@ client.on("ready", (bot) => {
       guild.members.fetch();
     })
   });
-});
-  
 
   //let zach = getUserByUsername("chompskii");
   //console.log(zach);
 });
+  
+
+  
 
 //zach is cringe lmao
 client.on("messageCreate", (message) => {
