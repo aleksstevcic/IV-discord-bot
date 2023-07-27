@@ -25,17 +25,30 @@ client.on("messageCreate", (message) => {
     if (message.content.indexOf("cringe") > -1) {
 
       //get user of specific username
-      
+      //let user = client.users.fetch("id");
 
       //reply
-      message.reply("@chompskii is cringe");
+      //let zach = getUserByUsername("chompskii");
+      //message.reply("<@" + zach + "> is cringe");
 
 
       //this will send a message to that channel
       //message.channel.send();
     }
+
+    console.log(message.author);
   }
 });
+
+function getUserByUsername(username = ""){
+  if(username==="") return;
+  
+  for(let user in client.guilds.cache.users){
+    if(user.username === username) return user.id;
+  }
+
+  return;
+}
 
 //will only be accessible via secret in github action. testing on a local machine is impossible rn
 client.login(process.env.BOT_TOKEN);
