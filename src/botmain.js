@@ -22,13 +22,14 @@ client.on("ready", (bot) => {
   //load and cache all guilds and members
   client.guilds.fetch().then(
     client.guilds.cache.forEach(guild => {
+      console.log(guild);
       guild.members.fetch();
     })
   );
   
 
-  let zach = getUserByUsername("chompskii");
-  console.log(zach);
+  //let zach = getUserByUsername("chompskii");
+  //console.log(zach);
 });
 
 //zach is cringe lmao
