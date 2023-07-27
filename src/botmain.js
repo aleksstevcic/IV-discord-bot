@@ -14,6 +14,7 @@ const client = new Client({
   ]
 });
 
+//events
 client.on("ready", (bot) => {
   console.log(`${bot.user.tag} ready!`);
 
@@ -27,19 +28,24 @@ client.on("ready", (bot) => {
 });
   
 
-  
-
 //zach is cringe lmao
 client.on("messageCreate", (message) => {
+
+
+
   //if message is not by a bot
   if (!message.author.bot) {
-    //if message contains the keyword "cringe"
-    if (message.content.indexOf("cringe") > -1) {
+
+    
+    //if the message has the word "weed" in it
+    if (message.content.indexOf("weed") > -1) {
 
       //get user of specific username
       let zach = getUserByUsername("chompskii");
+
       //reply
-      message.reply("<@" + zach.user.id + "> is cringe");
+      if(message.author.id === zach.user.id) message.reply("brooooo you love weed? damn thats sick yodie fam");
+      else message.reply("weed? yo i heard <@" + zach.user.id + "> smokes weed");
 
 
       //this will send a message to that channel
@@ -74,6 +80,10 @@ function getUserByUsername(username = ""){
       }
     }
   }
+}
+
+function weed(){
+
 }
 
 //will only be accessible via secret in github action. testing on a local machine is impossible rn
