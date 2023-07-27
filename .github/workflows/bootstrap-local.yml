@@ -28,6 +28,9 @@ jobs:
         #move the docker files to the main directory
         mv ./docker/* ./
         
+        #create dotenv file for token access
+        echo "BOT_TOKEN=$bottoken" >> .env
+        
         #variables. interfaces with portainer
         stackid="39"
 
