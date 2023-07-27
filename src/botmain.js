@@ -18,7 +18,11 @@ client.on("ready", (bot) => {
   console.log(`${bot.user.tag} ready!`);
 
   //load and cache all guilds and members
-  client.guilds.fetch().then((guilds) => {
+  client.guilds.fetch().then((guilds,a,b,c) => {
+    console.log(guilds);
+    console.log(a);
+    console.log(b);
+    console.log(c);
     guilds.forEach(guild => {
       console.log(guild);
       guild.members.fetch();
