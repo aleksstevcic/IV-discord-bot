@@ -63,15 +63,17 @@ client.on("messageCreate", (message) => {
 
 client.on('presenceUpdate', (oldpresence, newpresence) => {
   
-  if("activities" in oldpresence && "activities" in newpresence){
+  //try catch cause nothing else works to detect nulls for some reason
+  try{
     //this is such an inefficient function lil bro i dont care
     leaguememes(oldpresence, newpresence);
   }
+  catch(e){}
 });
 
 function leaguememes(oldpresence, newpresence){
 
-
+  
   for(let newactivity of newpresence.activities){
 
     let stillPlayingLeague = false;
