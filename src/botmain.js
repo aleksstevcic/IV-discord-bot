@@ -57,7 +57,11 @@ client.on("messageCreate", (message) => {
       //this will send a message to that channel
       //message.channel.send();
     }
-    
+
+    //I heard hes a pretty cool guy
+    if (msgtext.indexOf("fantasticbob") > -1) {
+      message.reply("It seems you have mentioned fantasticbob. Did you know that TheFantasticbob is a YouTuber who uploads gaming videos on a weekly basis? Pretty neat right?!  You can find their channel here: https://www.youtube.com/@TheFantasticbob \n Don’t forget to subscribe to their channel for weekly uploads!");
+    }
   }
 });
 
