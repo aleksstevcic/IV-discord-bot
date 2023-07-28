@@ -42,9 +42,8 @@ client.on("messageCreate", (message) => {
   //if message is not by a bot
   if (!message.author.bot) {
 
-    
     //if the message has the word "weed" in it
-    if (msgtext.indexOf("weed") > -1) {
+    if ((/\bfantasticbob\b/gim).test(msgtext)) {
 
       //get user of specific username
       let zach = getUserByUsername("chompskii");
@@ -59,7 +58,7 @@ client.on("messageCreate", (message) => {
     }
 
     //I heard hes a pretty cool guy
-    if (msgtext.indexOf("fantasticbob") > -1) {
+    if ((/\bfantasticbob\b/gim).test(msgtext) || (/\bthefantasticbob\b/gim).test(msgtext)) {
       message.reply("It seems you have mentioned fantasticbob. Did you know that TheFantasticbob is a YouTuber who uploads gaming videos on a weekly basis? Pretty neat right?!  You can find their channel here: https://www.youtube.com/@TheFantasticbob \n Don’t forget to subscribe to their channel for weekly uploads!");
     }
   }
