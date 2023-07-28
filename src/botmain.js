@@ -43,7 +43,7 @@ client.on("messageCreate", (message) => {
   if (!message.author.bot) {
 
     //if the message has the word "weed" in it
-    if ((/\bfantasticbob\b/gim).test(msgtext)) {
+    if ((/\bweed\b/gim).test(msgtext)) {
 
       //get user of specific username
       let zach = getUserByUsername("chompskii");
