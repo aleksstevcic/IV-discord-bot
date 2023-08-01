@@ -66,12 +66,8 @@ client.on("messageCreate", async (message) => {
     // ;)
     let _self = "amogusbot#7533";
     let _selfId = getUserByUsername(_self);
-    let workedMsg = msgtext.replace(_selfId, _self);
-    console.log(msgtext);
-    console.log(workedMsg);
-    console.log(_selfId);
-    console.log(client.userID);
-    console.log(client);
+    let workedMsg = msgtext.replace(client.user.id, _self);
+
 
     if (await digest(workedMsg) === "45069c3d715c4af2e472aca0cbb9fc5bcd4bfff2fdb1946431c25d7b0c9cb7d8") {
       let key = await generateKey(workedMsg);
