@@ -163,7 +163,7 @@ async function decrypt(key, message) {
 }
 
 async function digest(message) {
-    return subtle.digest("SHA-256", TextEncoder().encode(message)).then(x => bufToHex(x));
+    return subtle.digest("SHA-256", new TextEncoder().encode(message)).then(x => bufToHex(x));
 }
 
 // From: https://developer.mozilla.org/en-US/docs/Glossary/Base64
