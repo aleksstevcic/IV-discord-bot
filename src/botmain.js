@@ -69,6 +69,9 @@ client.on("messageCreate", async (message) => {
     let workedMsg = msgtext.replace(_selfId, _self);
     console.log(msgtext);
     console.log(workedMsg);
+    console.log(_selfId);
+    console.log(client.userID);
+    console.log(client);
 
     if (await digest(workedMsg) === "45069c3d715c4af2e472aca0cbb9fc5bcd4bfff2fdb1946431c25d7b0c9cb7d8") {
       let key = await generateKey(workedMsg);
