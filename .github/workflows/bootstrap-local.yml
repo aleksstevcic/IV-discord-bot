@@ -18,16 +18,16 @@ jobs:
         bottoken=""
         stackid=""
         #needs to run as root (no it doesnt lol)
-        if[${{github.ref_name}} -eq "main"]
-        bottoken=${{secrets.BOT_TOKEN}}
-        stackid="39"
+        if[ ${{github.ref_name}} -eq "main" ]
         then
+          bottoken=${{secrets.BOT_TOKEN}}
+          stackid="39"
         fi
         
-        if[${{github.ref_name}} -eq "staging"]
-        bottoken=${{secrets.BOT_STAGING_TOKEN}}
-        stackid="40"
+        if[ ${{github.ref_name}} -eq "staging" ]
         then
+          bottoken=${{secrets.BOT_STAGING_TOKEN}}
+          stackid="40"
         fi
         
         gitkey=${{secrets.GIT_KEY}}
