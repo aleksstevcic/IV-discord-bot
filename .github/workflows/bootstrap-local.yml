@@ -2,9 +2,6 @@ name: "LOCAL: Deploy IV-discord-bot"
 
 on:
   push:
-    branches:
-      - main
-      - staging
   workflow_dispatch:
   
 jobs:
@@ -13,23 +10,54 @@ jobs:
     environment: dev
     steps:
     - name: shell
+      if: github.ref_name == 'main'
       run: |
 
-        bottoken=""
-        stackid=""
         #needs to run as root (no it doesnt lol)
-        if [ ${{github.ref_name}} == "main" ]
-        then
-          bottoken=${{secrets.BOT_TOKEN}}
-          stackid="39"
-        fi
+        stackid="39"
+        bottoken=${{secrets.BOT_TOKEN}}
+        gitkey=${{secrets.GIT_KEY}}
+        apikey=${{secrets.PORTAINER_KEY}}
+
+        #clear working folder
+        rm -rf ./*
+
+        #clone repository
+        git clone --branch ${{github.ref_name}} --single-branch https://aleksstevcic:$gitkey@github.com/aleksstevcic/IV-discord-bot
+        cd IV-discord-bot
         
-        if [ ${{github.ref_name}} == "staging" ]
-        then
-          bottoken=${{secrets.BOT_STAGING_TOKEN}}
-          stackid="40"
-        fi
+        #move the docker files to the main directory
+        mv ./docker/* ./
         
+        #create dotenv file for token access
+        echo "BOT_TOKEN=$bottoken" >> .env
+
+        #build with the dockerfile in the same folder, and name it alestevcom
+        #should be run within the root alestev.com folder
+        docker build -t iv-discord-bot-staging .
+
+        #stop compose file that runs this server
+        curl -X POST --insecure -I "https://localhost:9443/api/stacks/$stackid/stop" \
+        -H "X-API-Key:$apikey"
+
+        #wait a second
+        sleep 1
+
+        #start compose file that runs this server
+        curl -X POST --insecure -I "https://localhost:9443/api/stacks/$stackid/start" \
+        -H "X-API-Key:$apikey"
+
+        #prune any untagged images
+        yes | docker image prune
+
+
+    - name: shell
+      if: github.ref_name == 'staging'
+      run: |
+
+        #needs to run as root (no it doesnt lol)
+        stackid="40"
+        bottoken=${{secrets.BOT_STAGING_TOKEN}}
         gitkey=${{secrets.GIT_KEY}}
         apikey=${{secrets.PORTAINER_KEY}}
 
