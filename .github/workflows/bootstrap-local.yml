@@ -49,9 +49,6 @@ jobs:
           exit 1
         fi
         
-        apikey=${{secrets.PORTAINER_KEY}}
-
-        
         cd IV-discord-bot
 
         #switch to the right branch
@@ -60,6 +57,9 @@ jobs:
         #move the docker files to the main directory
         mv ./docker/* ./
         
+        #clear dotenv file
+        > .env
+
         #create dotenv file for token access
         echo "BOT_TOKEN=$bottoken" >> .env
 
@@ -67,18 +67,20 @@ jobs:
         #should be run within the root alestev.com folder
         docker build -t $imgname .
 
-        
 
     - name: 'prune docker images'
       run: |
-      
+
         #prune any untagged images
         yes | docker image prune
 
-    - name: 'restart stack'
+    - name: 'deploy'
       run: |
 
+
+        apikey=${{secrets.PORTAINER_KEY}}
         stackid=""
+
         if [ ${{github.ref_name}} == "main" ]
         then
           stackid="39"
