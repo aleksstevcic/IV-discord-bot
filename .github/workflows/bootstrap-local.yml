@@ -62,7 +62,7 @@ jobs:
         mv ./docker/* ./
         
         #clear dotenv file
-        "" > .env
+        cat /dev/null > .env
 
         #create dotenv file for token access
         echo "BOT_TOKEN=$bottoken" >> .env
