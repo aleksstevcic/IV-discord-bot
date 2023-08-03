@@ -2,7 +2,7 @@ name: "LOCAL: Deploy IV-discord-bot"
 
 on:
   push:
-    branches: [github.ref_name]
+    branches: ["all"]
   workflow_dispatch:
   
 jobs:
