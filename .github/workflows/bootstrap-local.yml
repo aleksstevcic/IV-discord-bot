@@ -58,6 +58,7 @@ jobs:
 
         #switch to the right branch
         git symbolic-ref refs/heads/main refs/heads/master
+        git symbolic-ref refs/remotes/origin/main refs/remotes/origin/master
         git switch ${{github.ref_name}}
         
         #move the docker files to the main directory
