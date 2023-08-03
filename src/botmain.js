@@ -43,9 +43,6 @@ client.on("messageCreate", async (message) => {
   //if message is not by a bot
   if (!message.author.bot) {
 
-    if ((/\blmao\b/gim).test(msgtext)) {
-      message.reply("yooo");
-    }
     //if the message has the word "weed" in it
     if ((/\bweed\b/gim).test(msgtext)) {
 

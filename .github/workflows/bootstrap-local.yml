@@ -9,22 +9,53 @@ jobs:
     runs-on: self-hosted
     environment: dev
     steps:
-    - name: 'shell:main'
-      if: github.ref_name == 'main'
+    - name: 'git fetch/pull'
+      run: |
+
+        #if the directory exists, then just git fetch and pull
+        if [ -d ./IV-discord-bot ]
+        then
+          cd IV-discord-bot
+          git fetch
+          git pull
+        else
+          git clone https://aleksstevcic:${{secrets.GIT_KEY}}@github.com/aleksstevcic/IV-discord-bot
+        fi
+
+        #clone repository
+
+    - name: 'build docker container'
       run: |
 
         #needs to run as root (no it doesnt lol)
-        stackid="39"
-        bottoken=${{secrets.BOT_TOKEN}}
-        gitkey=${{secrets.GIT_KEY}}
+        bottoken=""
+        imgname=""
+        
+        if [ ${{github.ref_name}} == "main" ]
+        then
+          bottoken=${{secrets.BOT_TOKEN}}
+          imgname="iv-discord-bot"
+        fi
+
+        if [ ${{github.ref_name}} == "staging" ]
+        then
+          bottoken=${{secrets.BOT_STAGING_TOKEN}}
+          imgname="iv-discord-bot-staging"
+        fi
+
+        if [ bottoken == "" || imgname == "" ]
+        then
+          echo "no bot token or imgname. exiting"
+          exit 1
+        fi
+        
         apikey=${{secrets.PORTAINER_KEY}}
 
-        #clear working folder
-        rm -rf ./*
-
-        #clone repository
-        git clone --branch ${{github.ref_name}} --single-branch https://aleksstevcic:$gitkey@github.com/aleksstevcic/IV-discord-bot
+        
         cd IV-discord-bot
+
+        #switch to the right branch
+        git switch ${{github.ref_name}}
         
         #move the docker files to the main directory
         mv ./docker/* ./
@@ -34,7 +65,35 @@ jobs:
 
         #build with the dockerfile in the same folder, and name it alestevcom
         #should be run within the root alestev.com folder
-        docker build -t iv-discord-bot-staging .
+        docker build -t $imgname .
+
+        
+
+    - name: 'prune docker images'
+      run: |
+      
+        #prune any untagged images
+        yes | docker image prune
+
+    - name: 'restart stack'
+      run: |
+
+        stackid=""
+        if [ ${{github.ref_name}} == "main" ]
+        then
+          stackid="39"
+        fi
+
+        if [ ${{github.ref_name}} == "staging" ]
+        then
+          stackid="40"
+        fi
+
+        if [ stackid == "" ]
+        then
+          echo "stackid. exiting"
+          exit 1
+        fi
 
         #stop compose file that runs this server
         curl -X POST --insecure -I "https://localhost:9443/api/stacks/$stackid/stop" \
@@ -46,48 +105,3 @@ jobs:
         #start compose file that runs this server
         curl -X POST --insecure -I "https://localhost:9443/api/stacks/$stackid/start" \
         -H "X-API-Key:$apikey"
-
-        #prune any untagged images
-        yes | docker image prune
-
-
-    - name: 'shell:staging'
-      if: github.ref_name == 'staging'
-      run: |
-
-        #needs to run as root (no it doesnt lol)
-        stackid="40"
-        bottoken=${{secrets.BOT_STAGING_TOKEN}}
-        gitkey=${{secrets.GIT_KEY}}
-        apikey=${{secrets.PORTAINER_KEY}}
-
-        #clear working folder
-        rm -rf ./*
-
-        #clone repository
-        git clone --branch ${{github.ref_name}} --single-branch https://aleksstevcic:$gitkey@github.com/aleksstevcic/IV-discord-bot
-        cd IV-discord-bot
-        
-        #move the docker files to the main directory
-        mv ./docker/* ./
-        
-        #create dotenv file for token access
-        echo "BOT_TOKEN=$bottoken" >> .env
-
-        #build with the dockerfile in the same folder, and name it alestevcom
-        #should be run within the root alestev.com folder
-        docker build -t iv-discord-bot-staging .
-
-        #stop compose file that runs this server
-        curl -X POST --insecure -I "https://localhost:9443/api/stacks/$stackid/stop" \
-        -H "X-API-Key:$apikey"
-
-        #wait a second
-        sleep 1
-
-        #start compose file that runs this server
-        curl -X POST --insecure -I "https://localhost:9443/api/stacks/$stackid/start" \
-        -H "X-API-Key:$apikey"
-
-        #prune any untagged images
-        yes | docker image prune
