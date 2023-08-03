@@ -57,9 +57,8 @@ jobs:
         cd IV-discord-bot
 
         #switch to the right branch
+        git symbolic-ref refs/heads/main refs/heads/master
         git switch ${{github.ref_name}}
-
-        ls -l
         
         #move the docker files to the main directory
         mv ./docker/* ./
