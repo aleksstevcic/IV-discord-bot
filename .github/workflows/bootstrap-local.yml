@@ -9,7 +9,7 @@ jobs:
     runs-on: self-hosted
     environment: dev
     steps:
-    - name: shell
+    - name: 'shell:main'
       if: github.ref_name == 'main'
       run: |
 
@@ -51,7 +51,7 @@ jobs:
         yes | docker image prune
 
 
-    - name: shell
+    - name: 'shell:staging'
       if: github.ref_name == 'staging'
       run: |
 
