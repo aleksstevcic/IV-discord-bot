@@ -2,6 +2,9 @@ name: "LOCAL: Deploy IV-discord-bot"
 
 on:
   push:
+    branches:
+      - main
+      - staging
   workflow_dispatch:
   
 jobs:
