@@ -2,7 +2,7 @@ name: "LOCAL: Deploy IV-discord-bot"
 
 on:
   push:
-    branches: ["staging"]
+    branches: [github.ref_name]
   workflow_dispatch:
   
 jobs:
@@ -13,8 +13,21 @@ jobs:
     - name: shell
       run: |
 
+        bottoken=""
+        stackid=""
         #needs to run as root (no it doesnt lol)
+        if[${{github.ref_name}} -eq "main"]
+        bottoken=${{secrets.BOT_TOKEN}}
+        stackid="39"
+        then
+        fi
+        
+        if[${{github.ref_name}} -eq "staging"]
         bottoken=${{secrets.BOT_STAGING_TOKEN}}
+        stackid="40"
+        then
+        fi
+        
         gitkey=${{secrets.GIT_KEY}}
         apikey=${{secrets.PORTAINER_KEY}}
 
@@ -22,7 +35,7 @@ jobs:
         rm -rf ./*
 
         #clone repository
-        git clone https://aleksstevcic:$gitkey@github.com/aleksstevcic/IV-discord-bot
+        git clone --branch ${{github.ref_name}} --single-branch https://aleksstevcic:$gitkey@github.com/aleksstevcic/IV-discord-bot
         cd IV-discord-bot
         
         #move the docker files to the main directory
@@ -30,9 +43,6 @@ jobs:
         
         #create dotenv file for token access
         echo "BOT_TOKEN=$bottoken" >> .env
-        
-        #variables. interfaces with portainer
-        stackid="40"
 
         #build with the dockerfile in the same folder, and name it alestevcom
         #should be run within the root alestev.com folder
