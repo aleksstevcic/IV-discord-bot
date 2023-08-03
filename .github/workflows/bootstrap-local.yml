@@ -57,7 +57,7 @@ jobs:
         ls -l
         
         #move the docker files to the main directory
-        mv ./docker/* ./
+        mv ./docker/"*" ./
         
         #clear dotenv file
         > .env
