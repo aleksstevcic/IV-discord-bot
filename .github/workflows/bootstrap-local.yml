@@ -20,7 +20,7 @@ jobs:
         then
           rm -rf ./IV-discord-bot
         fi
-        
+
         git clone https://aleksstevcic:${{secrets.GIT_KEY}}@github.com/aleksstevcic/IV-discord-bot
 
     - name: 'build docker container'
@@ -51,7 +51,7 @@ jobs:
         cd IV-discord-bot
 
         #switch to the right branch
-        git switch origin/${{github.ref_name}}
+        git switch ${{github.ref_name}}
         
         #move the docker files to the main directory
         mv ./docker/* ./
