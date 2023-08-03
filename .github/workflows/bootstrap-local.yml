@@ -18,16 +18,10 @@ jobs:
         #if the directory exists, then just git fetch and pull
         if [ -d ./IV-discord-bot ]
         then
-          cd IV-discord-bot
-          git reset --hard
-          git clean -fdx
-          git fetch
-          git pull
-        else
-          git clone https://aleksstevcic:${{secrets.GIT_KEY}}@github.com/aleksstevcic/IV-discord-bot
+          rm -rf ./IV-discord-bot
         fi
-
-        #clone repository
+        
+        git clone https://aleksstevcic:${{secrets.GIT_KEY}}@github.com/aleksstevcic/IV-discord-bot
 
     - name: 'build docker container'
       run: |
