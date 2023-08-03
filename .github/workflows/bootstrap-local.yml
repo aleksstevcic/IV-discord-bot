@@ -1,0 +1,116 @@
+name: "LOCAL: Deploy IV-discord-bot"
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+  workflow_dispatch:
+  
+jobs:
+  deploy:
+    runs-on: self-hosted
+    environment: dev
+    steps:
+    - name: 'git fetch/pull'
+      run: |
+
+        #if the directory exists, then just git fetch and pull
+        if [ -d ./IV-discord-bot ]
+        then
+          cd IV-discord-bot
+          git reset --hard
+          git clean -fdx
+          git fetch
+          git pull
+        else
+          git clone https://aleksstevcic:${{secrets.GIT_KEY}}@github.com/aleksstevcic/IV-discord-bot
+        fi
+
+        #clone repository
+
+    - name: 'build docker container'
+      run: |
+
+        #needs to run as root (no it doesnt lol)
+        bottoken=""
+        imgname=""
+        
+        if [ ${{github.ref_name}} == "main" ]
+        then
+          bottoken=${{secrets.BOT_TOKEN}}
+          imgname="iv-discord-bot"
+        fi
+
+        if [ ${{github.ref_name}} == "staging" ]
+        then
+          bottoken=${{secrets.BOT_STAGING_TOKEN}}
+          imgname="iv-discord-bot-staging"
+        fi
+
+        if [ bottoken == "" || imgname == "" ]
+        then
+          echo "no bot token or imgname. exiting"
+          exit 1
+        fi
+        
+        cd IV-discord-bot
+
+        #switch to the right branch
+        git switch ${{github.ref_name}}
+
+        ls -l
+        
+        #move the docker files to the main directory
+        mv ./docker/* ./
+        
+        #clear dotenv file
+        cat /dev/null > .env
+
+        #create dotenv file for token access
+        echo "BOT_TOKEN=$bottoken" >> .env
+
+        #build with the dockerfile in the same folder, and name it alestevcom
+        #should be run within the root alestev.com folder
+        docker build -t $imgname .
+
+
+    - name: 'prune docker images'
+      run: |
+
+        #prune any untagged images
+        yes | docker image prune
+
+    - name: 'deploy'
+      run: |
+
+
+        apikey=${{secrets.PORTAINER_KEY}}
+        stackid=""
+
+        if [ ${{github.ref_name}} == "main" ]
+        then
+          stackid="39"
+        fi
+
+        if [ ${{github.ref_name}} == "staging" ]
+        then
+          stackid="40"
+        fi
+
+        if [ stackid == "" ]
+        then
+          echo "stackid. exiting"
+          exit 1
+        fi
+
+        #stop compose file that runs this server
+        curl -X POST --insecure -I "https://localhost:9443/api/stacks/$stackid/stop" \
+        -H "X-API-Key:$apikey"
+
+        #wait a second
+        sleep 1
+
+        #start compose file that runs this server
+        curl -X POST --insecure -I "https://localhost:9443/api/stacks/$stackid/start" \
+        -H "X-API-Key:$apikey"
