@@ -2,7 +2,7 @@ name: "LOCAL: Deploy IV-discord-bot"
 
 on:
   push:
-    branches: ["main"]
+    branches: ["staging"]
   workflow_dispatch:
   
 jobs:
@@ -14,7 +14,7 @@ jobs:
       run: |
 
         #needs to run as root (no it doesnt lol)
-        bottoken=${{secrets.BOT_TOKEN}}
+        bottoken=${{secrets.BOT_STAGING_TOKEN}}
         gitkey=${{secrets.GIT_KEY}}
         apikey=${{secrets.PORTAINER_KEY}}
 
@@ -32,11 +32,11 @@ jobs:
         echo "BOT_TOKEN=$bottoken" >> .env
         
         #variables. interfaces with portainer
-        stackid="39"
+        stackid="40"
 
         #build with the dockerfile in the same folder, and name it alestevcom
         #should be run within the root alestev.com folder
-        docker build -t iv-discord-bot .
+        docker build -t iv-discord-bot-staging .
 
         #stop compose file that runs this server
         curl -X POST --insecure -I "https://localhost:9443/api/stacks/$stackid/stop" \
