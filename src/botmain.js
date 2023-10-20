@@ -178,7 +178,7 @@ function leagueTimeout(userID){
 }
 
 //this took me way too long holy shit
-function getUserByUsername(username = ""){
+global.getUserByUsername = function getUserByUsername(username = ""){
   if(username==="") return;
   
   //get guilds
