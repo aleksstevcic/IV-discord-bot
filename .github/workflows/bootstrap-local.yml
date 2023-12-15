@@ -97,12 +97,12 @@ jobs:
         fi
 
         #stop compose file that runs this server
-        curl -X POST --insecure -I "https://localhost:9443/api/stacks/$stackid/stop" \
+        curl -X POST --insecure -I "https://localhost:9443/api/stacks/$stackid/stop?endpointId=2" \
         -H "X-API-Key:$apikey"
 
         #wait a second
         sleep 1
 
         #start compose file that runs this server
-        curl -X POST --insecure -I "https://localhost:9443/api/stacks/$stackid/start" \
+        curl -X POST --insecure -I "https://localhost:9443/api/stacks/$stackid/start?endpointId=2" \
         -H "X-API-Key:$apikey"
