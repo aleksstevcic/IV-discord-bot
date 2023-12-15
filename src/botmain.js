@@ -43,6 +43,10 @@ client.on("messageCreate", async (message) => {
   //if message is not by a bot
   if (!message.author.bot) {
 
+    if(msgtext === "aidan is cringe" && message.guild.id == "213236768655278080"){
+      message.reply("so true. <@"+ getUserByUsername("parose").user.id + "> is very cringe");
+    }
+
     //if the message has the word "weed" in it
     if ((/\bweed\b/gim).test(msgtext)) {
 
@@ -51,7 +55,7 @@ client.on("messageCreate", async (message) => {
 
       //reply
       if(message.author.id === zach.user.id) message.reply("brooooo you love weed? damn thats sick yodie fam");
-      else message.reply("weed? yo i heard <@" + zach.user.id + "> smokes weed");
+      else if (zach !== null) message.reply("weed? yo i heard <@" + zach.user.id + "> smokes weed");
 
 
       //this will send a message to that channel
@@ -59,7 +63,7 @@ client.on("messageCreate", async (message) => {
     }
 
     //I heard hes a pretty cool guy
-    if ((/\bfantasticbob\b/gim).test(msgtext) || (/\bthefantasticbob\b/gim).test(msgtext)) {
+    if (((/\bfantasticbob\b/gim).test(msgtext) || (/\bthefantasticbob\b/gim).test(msgtext)) && message.guild.id == "277239120860938240") {
       message.reply("It seems you have mentioned fantasticbob. Did you know that TheFantasticbob is a YouTuber who uploads gaming videos on a weekly basis? Pretty neat right?!  You can find their channel here: https://www.youtube.com/@TheFantasticbob \n Don’t forget to subscribe to their channel for weekly uploads!");
     }
 
