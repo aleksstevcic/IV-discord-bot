@@ -2,7 +2,7 @@
 require('dotenv').config();
 
 
-const { Client, IntentsBitField } = require("discord.js");
+const { Client, IntentsBitField, MessageFlags, MessagePayload } = require("discord.js");
 const { subtle } = require('crypto').webcrypto;
 
 //globals
@@ -62,6 +62,43 @@ client.on("messageCreate", async (message) => {
     if ((/\bfantasticbob\b/gim).test(msgtext) || (/\bthefantasticbob\b/gim).test(msgtext)) {
       message.reply("It seems you have mentioned fantasticbob. Did you know that TheFantasticbob is a YouTuber who uploads gaming videos on a weekly basis? Pretty neat right?!  You can find their channel here: https://www.youtube.com/@TheFantasticbob \n Don’t forget to subscribe to their channel for weekly uploads!");
     }
+
+
+
+    //fix twitter links automatically
+    let regex_X = /\b(https:\/\/x.com\/[^/]+\/[^/]+\/\d+)\b/gim
+    let regex_twitter = /\b(https:\/\/twitter.com\/[^/]+\/[^/]+\/\d+)\b/gim
+
+    if(regex_X.test(msgtext) || regex_twitter.test(msgtext)){
+
+      let x_links = msgtext.match(regex_X) || [];
+      let twitter_links = msgtext.match(regex_twitter) || [];
+      
+      x_links?.forEach((item, index) => {
+        x_links[index] = "https://fxtwitter.com/" + item.substring(14, item.length);
+      });
+
+      twitter_links?.forEach((item, index) => {
+        twitter_links[index] = "https://fxtwitter.com/" + item.substring(20, item.length);
+      });
+
+      let all_links = x_links.concat(twitter_links);
+
+      let fixtwitterstring = all_links?.reduce((a,b)=>{
+        return a+b+"\n";
+      }, "<@" + message.author.id + ">" + " sent: ");
+
+      let payload = MessagePayload.create(message.channel, {flags: MessageFlags.SuppressNotifications});
+
+      payload.body = {
+        content: fixtwitterstring
+      };
+
+      message.channel.send(payload);
+      message.delete();
+    }
+
+
 
     // ;)
     let _self = client.user.tag;
@@ -178,6 +215,7 @@ function leagueTimeout(userID){
 }
 
 //this took me way too long holy shit
+//making global because gabe is cringe?
 global.getUserByUsername = function getUserByUsername(username = ""){
   if(username==="") return;
   
@@ -236,6 +274,3 @@ function weed(){
 
 //will only be accessible via secret in github action. testing on a local machine is impossible rn
 client.login(process.env.BOT_TOKEN);
-
-
-
