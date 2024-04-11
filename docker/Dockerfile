@@ -10,11 +10,11 @@ WORKDIR /usr/src/app
 # where available (npm@5+)
 COPY package*.json ./
 
-RUN bun init
+RUN bun install
 # If you are building your code for production
 # RUN npm ci --omit=dev
 
 # Bundle app source
 COPY . .
 
-CMD [ "node", "." ]
+ENTRYPOINT [ "bun", "run", "src/botmain.js" ]
