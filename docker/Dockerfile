@@ -1,6 +1,6 @@
 #https://nodejs.org/en/docs/guides/nodejs-docker-webapp
 
-FROM node:slim
+FROM oven/bun:distroless
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -10,7 +10,7 @@ WORKDIR /usr/src/app
 # where available (npm@5+)
 COPY package*.json ./
 
-RUN npm install
+RUN bun init
 # If you are building your code for production
 # RUN npm ci --omit=dev
 
