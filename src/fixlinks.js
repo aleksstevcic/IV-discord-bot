@@ -34,7 +34,7 @@ function fixLinks(msgtext){
 
             let links = msgtext.match(regex.expression) || [];
             links?.forEach((item, index) => {
-                links[index] = replaceWith + item.substring(regex.length, item.length);
+                links[index] = regex.replaceWith + item.substring(regex.length, item.length);
             });
             return links;
         }
