@@ -28,7 +28,7 @@ function test(msgtext, regex){
 
 function fixLinks(msgtext){
 
-    for(regex in regex_objs){
+    for(let regex of regex_objs){
         
         if(regex.expression.test(msgtext)){
 
