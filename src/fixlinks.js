@@ -40,5 +40,5 @@ function fixLinks(msgtext){
         }
     }
 
-    return 0;
+    return [];
 }
