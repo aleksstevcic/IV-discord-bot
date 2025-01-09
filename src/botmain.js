@@ -73,7 +73,6 @@ client.on("messageCreate", async (message) => {
 
 
     let links = fixlinks.fixLinks(msgtext);
-    console.log(links);
 
     for(let link of links){
       let payload = MessagePayload.create(message.channel, {flags: MessageFlags.SuppressNotifications});
@@ -87,7 +86,7 @@ client.on("messageCreate", async (message) => {
       message.channel.send(payload);
       
     }
-    
+
     if(links.length > 0){
       message.delete();
     }
