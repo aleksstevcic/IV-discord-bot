@@ -1,6 +1,7 @@
 //dotenv is generated during build action. all secrets should be stored in github secrets
 require('dotenv').config();
 
+let fixlinks = require("./fixlinks.js");
 
 const { Client, IntentsBitField, MessageFlags, MessagePayload } = require("discord.js");
 const { subtle } = require('crypto').webcrypto;
@@ -18,6 +19,8 @@ const client = new Client({
 
 const leagueAppID = "401518684763586560";
 const leagueTimeoutTime = 30*60*1000;
+const twitterprefix = "https://girlcockx.com/";
+const instagramprefix = "https://www.ddinstagram.com/";
 
 let timers = {};
 
@@ -73,17 +76,20 @@ client.on("messageCreate", async (message) => {
     let regex_X = /\b(https:\/\/x.com\/[^/]+\/[^/]+\/\d+)\b/gim
     let regex_twitter = /\b(https:\/\/twitter.com\/[^/]+\/[^/]+\/\d+)\b/gim
 
+    //instagram links
+    let regex_instagram = /\b(https:\/\/www.instagram.com\/reel\/[^/]+\/[^/ ]+)\b/gim
+
     if(regex_X.test(msgtext) || regex_twitter.test(msgtext)){
 
       let x_links = msgtext.match(regex_X) || [];
       let twitter_links = msgtext.match(regex_twitter) || [];
       
       x_links?.forEach((item, index) => {
-        x_links[index] = "https://fxtwitter.com/" + item.substring(14, item.length);
+        x_links[index] = twitterprefix + item.substring(14, item.length);
       });
 
       twitter_links?.forEach((item, index) => {
-        twitter_links[index] = "https://fxtwitter.com/" + item.substring(20, item.length);
+        twitter_links[index] = twitterprefix + item.substring(20, item.length);
       });
 
       let all_links = x_links.concat(twitter_links);
