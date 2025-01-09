@@ -1,6 +1,7 @@
 //dotenv is generated during build action. all secrets should be stored in github secrets
 require('dotenv').config();
 
+let fixlinks = require("./fixlinks.js");
 
 const { Client, IntentsBitField, MessageFlags, MessagePayload } = require("discord.js");
 const { subtle } = require('crypto').webcrypto;
@@ -18,6 +19,8 @@ const client = new Client({
 
 const leagueAppID = "401518684763586560";
 const leagueTimeoutTime = 30*60*1000;
+const twitterprefix = "https://girlcockx.com/";
+const instagramprefix = "https://www.ddinstagram.com/";
 
 let timers = {};
 
@@ -38,17 +41,18 @@ client.on("ready", (bot) => {
 //zach is cringe lmao
 client.on("messageCreate", async (message) => {
 
-  let msgtext = message.content.toLowerCase();
+  let msgtext = message.content;
+  let msgtextLower = message.content.toLowerCase();
 
   //if message is not by a bot
   if (!message.author.bot) {
 
-    if(msgtext === "aidan is cringe" && message.guild.id == "213236768655278080"){
+    if(msgtextLower === "aidan is cringe" && message.guild.id == "213236768655278080"){
       message.reply("so true. <@"+ getUserByUsername("parose").user.id + "> is very cringe");
     }
 
     //if the message has the word "weed" in it
-    if ((/\bweed\b/gim).test(msgtext)) {
+    if ((/\bweed\b/gim).test(msgtextLower)) {
 
       //get user of specific username
       let zach = getUserByUsername("chompskii");
@@ -63,51 +67,34 @@ client.on("messageCreate", async (message) => {
     }
 
     //I heard hes a pretty cool guy
-    if (((/\bfantasticbob\b/gim).test(msgtext) || (/\bthefantasticbob\b/gim).test(msgtext)) && message.guild.id == "277239120860938240") {
+    if (((/\bfantasticbob\b/gim).test(msgtextLower) || (/\bthefantasticbob\b/gim).test(msgtextLower)) && message.guild.id == "277239120860938240") {
       message.reply("It seems you have mentioned fantasticbob. Did you know that TheFantasticbob is a YouTuber who uploads gaming videos on a weekly basis? Pretty neat right?!  You can find their channel here: https://www.youtube.com/@TheFantasticbob \n Don’t forget to subscribe to their channel for weekly uploads!");
     }
 
 
+    let links = fixlinks.fixLinks(msgtext);
 
-    //fix twitter links automatically
-    let regex_X = /\b(https:\/\/x.com\/[^/]+\/[^/]+\/\d+)\b/gim
-    let regex_twitter = /\b(https:\/\/twitter.com\/[^/]+\/[^/]+\/\d+)\b/gim
-
-    if(regex_X.test(msgtext) || regex_twitter.test(msgtext)){
-
-      let x_links = msgtext.match(regex_X) || [];
-      let twitter_links = msgtext.match(regex_twitter) || [];
-      
-      x_links?.forEach((item, index) => {
-        x_links[index] = "https://fxtwitter.com/" + item.substring(14, item.length);
-      });
-
-      twitter_links?.forEach((item, index) => {
-        twitter_links[index] = "https://fxtwitter.com/" + item.substring(20, item.length);
-      });
-
-      let all_links = x_links.concat(twitter_links);
-
-      let fixtwitterstring = all_links?.reduce((a,b)=>{
-        return a+b+"\n";
-      }, "<@" + message.author.id + ">" + " sent: ");
-
+    for(let link of links){
       let payload = MessagePayload.create(message.channel, {flags: MessageFlags.SuppressNotifications});
-
+      
+      let newmsg = "<@" + message.author.id + ">" + " sent: " + link
+      
       payload.body = {
-        content: fixtwitterstring
+        content: newmsg
       };
 
       message.channel.send(payload);
-      message.delete();
+      
     }
 
-
+    if(links.length > 0){
+      message.delete();
+    }
 
     // ;)
     let _self = client.user.tag;
     let _selfId = client.user.id;
-    let workedMsg = msgtext.replace(client.user.id, _self);
+    let workedMsg = msgtextLower.replace(client.user.id, _self);
 
 
     if (await digest(workedMsg) === "45069c3d715c4af2e472aca0cbb9fc5bcd4bfff2fdb1946431c25d7b0c9cb7d8") {
