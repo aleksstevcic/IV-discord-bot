@@ -41,17 +41,18 @@ client.on("ready", (bot) => {
 //zach is cringe lmao
 client.on("messageCreate", async (message) => {
 
-  let msgtext = message.content.toLowerCase();
+  let msgtext = message.content;
+  let msgtextLower = message.content.toLowerCase();
 
   //if message is not by a bot
   if (!message.author.bot) {
 
-    if(msgtext === "aidan is cringe" && message.guild.id == "213236768655278080"){
+    if(msgtextLower === "aidan is cringe" && message.guild.id == "213236768655278080"){
       message.reply("so true. <@"+ getUserByUsername("parose").user.id + "> is very cringe");
     }
 
     //if the message has the word "weed" in it
-    if ((/\bweed\b/gim).test(msgtext)) {
+    if ((/\bweed\b/gim).test(msgtextLower)) {
 
       //get user of specific username
       let zach = getUserByUsername("chompskii");
@@ -66,30 +67,35 @@ client.on("messageCreate", async (message) => {
     }
 
     //I heard hes a pretty cool guy
-    if (((/\bfantasticbob\b/gim).test(msgtext) || (/\bthefantasticbob\b/gim).test(msgtext)) && message.guild.id == "277239120860938240") {
+    if (((/\bfantasticbob\b/gim).test(msgtextLower) || (/\bthefantasticbob\b/gim).test(msgtextLower)) && message.guild.id == "277239120860938240") {
       message.reply("It seems you have mentioned fantasticbob. Did you know that TheFantasticbob is a YouTuber who uploads gaming videos on a weekly basis? Pretty neat right?!  You can find their channel here: https://www.youtube.com/@TheFantasticbob \n Don’t forget to subscribe to their channel for weekly uploads!");
     }
 
 
+    let links = fixlinks.fixLinks(msgtext);
+    console.log(links);
 
-    console.log(fixlinks.fixLinks(msgtext));
+    for(let link of links){
+      let payload = MessagePayload.create(message.channel, {flags: MessageFlags.SuppressNotifications});
+      
+      let newmsg = "<@" + message.author.id + ">" + " sent: " + link
+      
+      payload.body = {
+        content: newmsg
+      };
 
-
-    /*
-    let payload = MessagePayload.create(message.channel, {flags: MessageFlags.SuppressNotifications});
-
-    payload.body = {
-      content: fixtwitterstring
-    };
-
-    message.channel.send(payload);
-    message.delete();
-    */
+      message.channel.send(payload);
+      
+    }
+    
+    if(links.length > 0){
+      message.delete();
+    }
 
     // ;)
     let _self = client.user.tag;
     let _selfId = client.user.id;
-    let workedMsg = msgtext.replace(client.user.id, _self);
+    let workedMsg = msgtextLower.replace(client.user.id, _self);
 
 
     if (await digest(workedMsg) === "45069c3d715c4af2e472aca0cbb9fc5bcd4bfff2fdb1946431c25d7b0c9cb7d8") {
