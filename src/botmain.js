@@ -72,43 +72,19 @@ client.on("messageCreate", async (message) => {
 
 
 
-    //fix twitter links automatically
-    let regex_X = /\b(https:\/\/x.com\/[^/]+\/[^/]+\/\d+)\b/gim
-    let regex_twitter = /\b(https:\/\/twitter.com\/[^/]+\/[^/]+\/\d+)\b/gim
-
-    //instagram links
-    let regex_instagram = /\b(https:\/\/www.instagram.com\/reel\/[^/]+\/[^/ ]+)\b/gim
-
-    if(regex_X.test(msgtext) || regex_twitter.test(msgtext)){
-
-      let x_links = msgtext.match(regex_X) || [];
-      let twitter_links = msgtext.match(regex_twitter) || [];
-      
-      x_links?.forEach((item, index) => {
-        x_links[index] = twitterprefix + item.substring(14, item.length);
-      });
-
-      twitter_links?.forEach((item, index) => {
-        twitter_links[index] = twitterprefix + item.substring(20, item.length);
-      });
-
-      let all_links = x_links.concat(twitter_links);
-
-      let fixtwitterstring = all_links?.reduce((a,b)=>{
-        return a+b+"\n";
-      }, "<@" + message.author.id + ">" + " sent: ");
-
-      let payload = MessagePayload.create(message.channel, {flags: MessageFlags.SuppressNotifications});
-
-      payload.body = {
-        content: fixtwitterstring
-      };
-
-      message.channel.send(payload);
-      message.delete();
-    }
+    console.log(fixlinks.fixLinks(msgtest));
 
 
+    /*
+    let payload = MessagePayload.create(message.channel, {flags: MessageFlags.SuppressNotifications});
+
+    payload.body = {
+      content: fixtwitterstring
+    };
+
+    message.channel.send(payload);
+    message.delete();
+    */
 
     // ;)
     let _self = client.user.tag;

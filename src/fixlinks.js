@@ -1,37 +1,43 @@
-//consts
-const twitterprefix = "https://girlcockx.com/";
-const instagramprefix = "https://www.ddinstagram.com/";
-
-//fix twitter links automatically
-const regex_X = {
-    expression: /\b(https:\/\/x.com\/[^/]+\/[^/]+\/\d+)\b/gim,
-    length: 14
-}
-const regex_twitter = {
-    expression: /\b(https:\/\/twitter.com\/[^/]+\/[^/]+\/\d+)\b/gim,
-    length: 20
+module.exports = {
+    fixLinks: fixLinks
 }
 
-//instagram links
-const regex_instagram = {
-    expression: /\b(https:\/\/www.instagram.com\/reel\/[^/]+\/[^/ ]+)\b/gim,
-    length: 26
+//list of regex matches to make. to register a new one, just add a new object
+const regex_objs = [
+    {
+        expression: /\b(https:\/\/x.com\/[^/]+\/[^/]+\/\d+)\b/gim,
+        replaceWith: "https://girlcockx.com/",
+        length: 14
+    },
+    {
+        expression: /\b(https:\/\/twitter.com\/[^/]+\/[^/]+\/\d+)\b/gim,
+        replaceWith: "https://girlcockx.com/",
+        length: 20
+    },
+    {
+        expression: /\b(https:\/\/www.instagram.com\/reel\/[^/]+\/[^/ ]+)\b/gim,
+        replaceWith: "https://www.ddinstagram.com/",
+        length: 26
+    }
+];
+
+
+function test(msgtext, regex){
+    return regex.expression.test(msgtext);
 }
 
+function fixLinks(msgtext){
 
-function fixLinks(message, regex, replaceWith){
-
-    let msgtext = message.content.toLowerCase();
-
-    if(regex.expression.test(msgtext)){
-
-        let links = msgtext.match(regex.expression) || [];
+    for(regex in regex_objs){
         
-        links?.forEach((item, index) => {
-            links[index] = replaceWith + item.substring(regex.length, item.length);
-        });
+        if(regex.expression.test(msgtext)){
 
-        return links;
+            let links = msgtext.match(regex.expression) || [];
+            links?.forEach((item, index) => {
+                links[index] = replaceWith + item.substring(regex.length, item.length);
+            });
+            return links;
+        }
     }
 
     return 0;
