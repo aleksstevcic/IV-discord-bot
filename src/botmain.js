@@ -72,7 +72,7 @@ client.on("messageCreate", async (message) => {
 
 
 
-    console.log(fixlinks.fixLinks(msgtest));
+    console.log(fixlinks.fixLinks(msgtext));
 
 
     /*
