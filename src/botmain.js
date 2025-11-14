@@ -110,10 +110,41 @@ client.on('presenceUpdate', (oldpresence, newpresence) => {
   //try catch cause nothing else works to detect nulls for some reason
   try{
     //this is such an inefficient function lil bro i dont care
-    leaguememes(oldpresence, newpresence);
+    //NOT ANYMORE! lmao
+    leaguememes2(oldpresence, newpresence);
   }
   catch(e){}
 });
+
+//a better function to do league detection
+function leaguememes2(oldpresence, newpresence){
+
+  let activity = {
+    wasplayingleague: false,
+    isplayingleague: false
+  }
+  
+  for(let oldactivity of oldpresence.activities){
+    if(oldactivity.applicationId == leagueAppID){
+      activity.wasplayingleague = true;
+    }
+  }
+  for(let newactivity of newpresence.activities){
+    if(newactivity.applicationId == leagueAppID){
+      activity.isplayingleague = true;
+    }
+  }
+  
+  //start new timer
+  if(!activity.wasplayingleague && activity.isplayingleague){
+    timers[newpresence.userId] = setTimeout(leagueTimeout, leagueTimeoutTime, newpresence.userId);
+  }
+  //end timer
+  else if(activity.wasplayingleague && !activity.isplayingleague){
+    clearTimeout(timers[oldpresence.userId]);
+    delete timers[oldpresence.userId];
+  }
+}
 
 function leaguememes(oldpresence, newpresence){
 
