@@ -16,7 +16,7 @@ const regex_objs = [
     },
     {
         expression: /\b(https:\/\/www.instagram.com\/reel\/[^/]+\/)/gim,
-        replaceWith: "https://www.ddinstagram.com/",
+        replaceWith: "https://www.uuinstagram.com/",
         length: 26
     }
 ];
