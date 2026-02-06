@@ -1,0 +1,15 @@
+#version: '3'
+
+services:
+  web:
+    build: .
+    container_name: "IV-discord-bot"
+    restart: unless-stopped
+    networks:
+      PAZ_network:
+        ipv4_address: 192.168.235.13
+    profiles:
+     - donotstart
+networks:
+  PAZ_network:
+    external: true
