@@ -54,7 +54,7 @@ jobs:
         git switch ${{github.ref_name}}
         
         #move the docker files to the main directory
-        mv ./docker/* ./
+        #mv ./docker/* ./
         
         #clear dotenv file
         cat /dev/null > .env
